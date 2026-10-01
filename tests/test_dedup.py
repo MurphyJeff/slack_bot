@@ -1,7 +1,5 @@
 """Tests for SQLite deduplication store."""
 
-import os
-import time
 
 import pytest
 

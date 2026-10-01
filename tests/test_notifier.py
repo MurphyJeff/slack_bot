@@ -6,7 +6,6 @@ import pytest
 
 from group_bot.modules.groups.dedup import DedupStore
 from group_bot.modules.groups.notifier import (
-    NotificationResult,
     ThreadNotifier,
     compose_message,
     format_mentions,

@@ -1,13 +1,11 @@
 """Tests for configuration loading and validation."""
 
-import os
 
 import pytest
 
 from group_bot.config import (
     AppConfig,
     ConfigError,
-    GroupEntry,
     load_config,
 )
 

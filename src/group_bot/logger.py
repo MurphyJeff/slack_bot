@@ -7,7 +7,6 @@ text, or full user IDs — provides helper functions for anonymization.
 from __future__ import annotations
 
 import logging
-import re
 
 import structlog
 

@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import re
 
-
 # Slack-native mentions that must NEVER trigger our bot
 NATIVE_MENTIONS = frozenset({
     "ici",

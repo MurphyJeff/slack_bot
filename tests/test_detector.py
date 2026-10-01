@@ -2,7 +2,7 @@
 
 import pytest
 
-from group_bot.modules.groups.detector import AliasDetector, NATIVE_MENTIONS
+from group_bot.modules.groups.detector import AliasDetector
 
 
 class TestAliasDetector:
