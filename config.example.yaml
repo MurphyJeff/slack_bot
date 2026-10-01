@@ -1,0 +1,35 @@
+# config.example.yaml — CAEP Group Bot
+# Copy to config.yaml and edit. NEVER put tokens/secrets in this file.
+# Tokens are loaded from environment variables referenced by *_env keys.
+
+slack:
+  mode: socket                    # "socket" (recommended) or "http"
+  app_token_env: SLACK_APP_TOKEN  # xapp-... (Socket Mode connection)
+  bot_token_env: SLACK_BOT_TOKEN  # xoxb-... (bot actions: read/write messages)
+  signing_secret_env: SLACK_SIGNING_SECRET  # Events API signature verification
+
+filters:
+  # Empty allowed_channel_ids = all channels where the bot is a member
+  allowed_channel_ids: []
+  ignored_channel_ids: []
+  ignore_bot_messages: true       # Prevent loops — ignore messages from bots
+  ignore_thread_replies: false    # Also detect aliases in thread replies
+
+groups:
+  # Each group can have multiple users. Add/remove without code changes.
+  # Replace these example IDs with real Slack user IDs from your workspace.
+  com:
+    - user_id: "U0C5QA76"  # Martine — TODO: replace with real ID
+  bureau:
+    - user_id: "U0C5QAEE"  # Martin — TODO: replace with real ID
+
+notifications:
+  reply_in_thread: true           # Post notification in the original message's thread
+  deduplicate: true               # Prevent duplicate notifications (SQLite)
+  exclude_author: true            # Don't notify the message author
+  state_database: "/var/lib/group_bot/state.sqlite3"
+  # {mentions} is replaced with individual Slack mentions, e.g. <@U123> <@U456>
+  message_template: "cc {mentions}"
+
+retention:
+  dedup_days: 90                  # Auto-clean dedup records older than 90 days
