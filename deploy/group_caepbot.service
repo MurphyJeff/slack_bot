@@ -1,0 +1,42 @@
+[Unit]
+Description=CAEP Group Bot (Slack Socket Mode)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=groupbot
+Group=groupbot
+WorkingDirectory=/opt/group_bot
+EnvironmentFile=/etc/group_bot/secrets.env
+ExecStart=/opt/group_bot/.venv/bin/python -m group_bot --config /etc/group_bot/config.yaml
+Restart=on-failure
+RestartSec=10
+
+# --- Security hardening ---
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/group_bot
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_UNIX
+LockPersonality=true
+RestrictRealtime=true
+RemoveIPC=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+# --- Graceful shutdown ---
+TimeoutStopSec=30
+KillSignal=SIGTERM
+
+# --- Logging ---
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=group_caepbot
+
+[Install]
+WantedBy=multi-user.target
