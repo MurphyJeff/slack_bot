@@ -25,7 +25,7 @@ Aller dans **OAuth & Permissions** → **Bot Token Scopes** et ajouter:
 | `chat:write` | Publier les notifications dans les fils |
 | `channels:history` | Lire les messages des canaux publics |
 | `groups:history` | Lire les messages des canaux privés |
-| `users:read` | Valider les user IDs au démarrage (optionnel) |
+| `users:read` | Récupérer les noms d'affichage pour /group-list |
 
 > **À vérifier dans les sources officielles Slack** : la liste exacte des
 > scopes peut évoluer. Vérifier sur https://api.slack.com/scopes.
@@ -46,18 +46,30 @@ Aller dans **Event Subscriptions** → toggle ON.
 > En Socket Mode, l'URL de requête n'est pas nécessaire. Slack pousse
 > les événements via la connexion WebSocket.
 
-## 5. Installer l'app dans le workspace
+## 5. Configurer les Slash Commands
+
+Aller dans **Slash Commands** → **Create New Command** pour chaque commande:
+
+| Commande | Description | Usage suggestion |
+|---|---|---|
+| `/group-list` | Lister les groupes configurés | Visible par tous |
+| `/help` | Afficher l'aide du bot | Visible par tous |
+
+> En Socket Mode, l'URL de requête n'est pas nécessaire. Les slash commands
+> sont reçues via la connexion WebSocket.
+
+## 6. Installer l'app dans le workspace
 
 1. **OAuth & Permissions** → **Install to Workspace**
 2. Autoriser les permissions demandées
 3. Copier le **Bot User OAuth Token** `xoxb-...` → mettre dans `.env` comme `SLACK_BOT_TOKEN`
 
-## 6. Récupérer le Signing Secret
+## 7. Récupérer le Signing Secret
 
 1. **Basic Information** → **App Credentials**
 2. Copier le **Signing Secret** → mettre dans `.env` comme `SLACK_SIGNING_SECRET`
 
-## 7. Fichier `.env` local (développement)
+## 8. Fichier `.env` local (développement)
 
 ```bash
 cp .env.example .env
@@ -66,7 +78,7 @@ cp .env.example .env
 
 > **JAMAIS commiter `.env`** — le repo est public !
 
-## 8. Ajouter le bot aux canaux
+## 9. Ajouter le bot aux canaux
 
 ### Canal public
 
@@ -79,11 +91,12 @@ cp .env.example .env
 1. Un membre autorisé tape `/invite @CAEP Bot`
 2. Le bot ne peut pas rejoindre un canal privé sans invitation explicite
 
-## 9. Checklist de validation
+## 10. Checklist de validation
 
 - [ ] Socket Mode activé, App Token généré
-- [ ] Scopes configurés (chat:write, channels:history, groups:history)
+- [ ] Scopes configurés (chat:write, channels:history, groups:history, users:read)
 - [ ] Événements activés (message.channels, message.groups)
+- [ ] Slash commands créées (/group-list, /help)
 - [ ] App installée dans le workspace
 - [ ] Bot Token et Signing Secret récupérés
 - [ ] `.env` configuré localement (développement)
@@ -93,7 +106,7 @@ cp .env.example .env
 - [ ] Bot ajouté à un canal privé (via invitation) → test fonctionnel
 - [ ] Redémarrage du service → pas de double notification
 
-## 10. Limites et vérifications à effectuer
+## 11. Limites et vérifications à effectuer
 
 - Toute information concernant les forfaits Slack, les limites d'événements
   ou la tarification doit être vérifiée dans la documentation officielle:

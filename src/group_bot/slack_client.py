@@ -35,7 +35,42 @@ class SlackClient:
             bot_token: Slack Bot User OAuth Token (xoxb-...).
         """
         self._client = WebClient(token=bot_token)
+        self._user_cache: dict[str, dict | None] = {}
         log.info("slack_client_initialized", token=redact_token(bot_token))
+
+    def get_user_info(self, user_id: str) -> dict | None:
+        """Fetch user info from Slack, with in-memory caching.
+
+        Args:
+            user_id: Slack user ID (e.g. U12345678).
+
+        Returns:
+            User info dict from Slack API, or None on error.
+            The dict contains keys like 'real_name', 'display_name', 'profile'.
+        """
+        if user_id in self._user_cache:
+            return self._user_cache[user_id]
+
+        try:
+            response = self._client.users_info(user=user_id)
+            if response.get("ok"):
+                user_info = response.get("user", {})
+                self._user_cache[user_id] = user_info
+                return user_info
+            log.warning(
+                "users_info_not_ok",
+                user_id=truncate_id(user_id),
+                error=response.get("error"),
+            )
+        except SlackApiError as e:
+            log.warning(
+                "users_info_error",
+                user_id=truncate_id(user_id),
+                error=str(e),
+            )
+
+        self._user_cache[user_id] = None
+        return None
 
     def post_message(
         self,

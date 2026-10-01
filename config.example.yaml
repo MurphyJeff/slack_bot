@@ -33,3 +33,6 @@ notifications:
 
 retention:
   dedup_days: 90                  # Auto-clean dedup records older than 90 days
+
+admin_commands:
+  enabled: true                   # Enable /group-list and /help slash commands

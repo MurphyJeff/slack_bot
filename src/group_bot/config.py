@@ -55,12 +55,20 @@ class RetentionConfig:
 
 
 @dataclass(frozen=True)
+class AdminCommandsConfig:
+    enabled: bool
+
+
+@dataclass(frozen=True)
 class AppConfig:
     slack: SlackConfig
     filters: FilterConfig
     groups: dict[str, list[GroupEntry]]
     notifications: NotificationConfig
     retention: RetentionConfig
+    admin_commands: AdminCommandsConfig = field(
+        default_factory=lambda: AdminCommandsConfig(enabled=True)
+    )
     raw: dict[str, Any] = field(default_factory=dict, repr=False)
 
 
@@ -219,6 +227,16 @@ def _build_retention_config(data: dict[str, Any]) -> RetentionConfig:
     return RetentionConfig(dedup_days=dedup_days)
 
 
+def _build_admin_commands_config(data: dict[str, Any]) -> AdminCommandsConfig:
+    admin_data = data.get("admin_commands", {})
+    if not isinstance(admin_data, dict):
+        raise ConfigError("'admin_commands' section must be a mapping")
+
+    return AdminCommandsConfig(
+        enabled=bool(admin_data.get("enabled", True)),
+    )
+
+
 def _build_config(data: dict[str, Any]) -> AppConfig:
     return AppConfig(
         slack=_build_slack_config(data),
@@ -226,5 +244,6 @@ def _build_config(data: dict[str, Any]) -> AppConfig:
         groups=_build_groups(data),
         notifications=_build_notification_config(data),
         retention=_build_retention_config(data),
+        admin_commands=_build_admin_commands_config(data),
         raw=data,
     )

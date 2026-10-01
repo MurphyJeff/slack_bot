@@ -13,6 +13,7 @@ import structlog
 
 from group_bot.config import AppConfig
 from group_bot.logger import setup_logging
+from group_bot.modules.admin.module import AdminModule
 from group_bot.modules.base import BaseModule
 from group_bot.modules.groups.dedup import DedupStore
 from group_bot.modules.groups.module import GroupsModule
@@ -41,6 +42,14 @@ def create_modules(
             GroupsModule(
                 config=config,
                 dedup_store=dedup,
+                slack_client=slack_client,
+            )
+        )
+
+    if config.admin_commands.enabled:
+        modules.append(
+            AdminModule(
+                config=config,
                 slack_client=slack_client,
             )
         )
